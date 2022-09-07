@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/gradey-f22/static/css/main.073c9b0a.css",
+    "main.js": "/gradey-f22/static/js/main.e6e5a24b.js",
+    "static/js/787.a37c30b3.chunk.js": "/gradey-f22/static/js/787.a37c30b3.chunk.js",
+    "index.html": "/gradey-f22/index.html",
+    "main.073c9b0a.css.map": "/gradey-f22/static/css/main.073c9b0a.css.map",
+    "main.e6e5a24b.js.map": "/gradey-f22/static/js/main.e6e5a24b.js.map",
+    "787.a37c30b3.chunk.js.map": "/gradey-f22/static/js/787.a37c30b3.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.073c9b0a.css",
+    "static/js/main.e6e5a24b.js"
+  ]
+}
