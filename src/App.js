@@ -198,6 +198,7 @@ const Question = ({testData, section, updateToPaste, setTestData, toPaste}) => {
         </Grid>
 
       </FormGroup>
-
+      <br/>
+      <br/>
     </Box>)
 }
