@@ -8,81 +8,89 @@ import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
-import defaultData from "./defaultData";
 
-/**
- * Remove trailing punctuation - this helps ensure an item doesn't add
- * jarring punctuation within a comma separated list.
- *
- * @param {string} text
- * @return {string}
- *   Text with trailing punctuation removed
- */
 function rtp(text) {
   const match = text.match(new RegExp(`[^a-zA-Z0-9]+$`));
+  // No match found
   if (!match || !match.index) {
     return text;
   }
+  // Return sliced text
   return text.slice(0, match.index);
-}
-
-/**
- * Makes the first character of a string lowercase.
- * This is so it looks right in a comma separated list.
- *
- * @param {string} string
- *
- * @return {string}
- *   The string with a lowercase first character
- */
-const low = (string) => {
-  return string.charAt(0).toLowerCase() + string.slice(1);
-}
-
-/**
- * Capitalize the string.
- *
- * @param string
- * @return {string}
- */
-const cap = (string) => {
-  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 
 function App() {
-  const theTestData = localStorage.getItem('grading-criteria') ? JSON.parse(localStorage.getItem('grading-criteria')) : defaultData;
-  // The grading criteria, grouped by question.
+  const defaultCriteria = {
+    'technical implementation': [
+      {
+        'description': '"+" instead of template literals used to concatenate string',
+      },
+      {
+        'description': 'used function syntax instead of arrow function',
+      },
+      {
+        'description': 'a more efficient approach to a solution was presented in class',
+
+      },
+      {
+        'description': 'a `let` that could have been a `const`',
+      },
+      {
+        'description': 'used `var`',
+      },
+      {
+        'description': 'was possible to use implicit return of arrow function'
+      },
+      {
+        'description': 'event listener could have used anonymous callback'
+      },
+      {
+        'description': 'something other than querySelector/querySelectorAll used to retrieve elements'
+      }
+    ],
+    'style': [
+      {
+        'description': 'passes tests but not in way '
+      },
+      {
+        'description': 'files were changed outside of those specified by the assignment'
+      },
+      {
+        'description': `Regarding 👆 it is ok if package-lock.json changes, that could happen on local installs`,
+      },
+      {
+        'description': `unused code that wasn't cleaned up`
+      },
+      {
+        'description': `commented-out code that should have been removed`
+      },
+      {
+        'description': `pasted in snippet that was not refactored to match the overall assignment style`
+      },
+      {
+        'description': `comment that references something that does not exist in this assignment`
+      },
+      {
+        'description': `work brought in from another assignment that still references that prior assignment`,
+      }
+    ],
+  }
+
+  const theTestData = localStorage.getItem('grading-criteria') ? JSON.parse(localStorage.getItem('grading-criteria')) : defaultCriteria;
   const [testData, setTestData] = useState(theTestData);
-
-  // The items to be pasted in an object with the same structure as the test data - but
-  // only includes the items that should be added to the paste string.
   const [toPaste, setToPaste] = useState({});
-
-  // The string to be pasted into the "comments" in Canvas. This changes as additional
-  // items are checked.
   const [pasteString, setPasteString] = useState('');
 
 
-  /**
-   * This is the logic that runs when any item is checked/unchecked
-   * @param {string} description
-   *   A description of why points were added or removed.
-   * @param {string} section
-   *   The question or other area pertinent to the feedback.
-   * @param {boolean} checked
-   *   If the checkbox is checked or not.
-   */
   const updateToPaste = (description, section, checked) => {
     const toPasteClone = toPaste;
     if (checked) {
-      // Add the item to be part of the paste string.
       if (!toPasteClone[section]) {
         toPasteClone[section] = [];
       }
       toPasteClone[section].push(description);
     } else if (toPasteClone[section]) {
-      // Remove the item from the paste string.
       const index = toPasteClone[section].indexOf(description);
       if (index > -1) {
         toPasteClone[section].splice(index, 1); // 2nd parameter means remove one item only
@@ -92,6 +100,10 @@ function App() {
       }
     }
     setToPaste(toPasteClone);
+
+    const cap = (string) => {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    }
 
     let output = '';
     Object.keys(toPasteClone).forEach(section => {
@@ -114,7 +126,7 @@ function App() {
   return (
     <Container maxWidth="lg">
       <header>
-        <h1>Do grades</h1>
+        <h1>Do grades based on <a href='https://observablehq.com/@benm/syntax-style-that-will-impact-your-grade'>These Requirements</a></h1>
       </header>
       {pasteString && <h4>Paste this in:</h4>}
       {pasteString}
@@ -133,11 +145,14 @@ const Question = ({testData, section, updateToPaste, setTestData, toPaste}) => {
       <FormControlLabel key={index} control={<Checkbox
         onChange={(e) => updateToPaste(item.description, section, e.target.checked)}  />}
                         label={item.description}
-                        checked={!!(toPaste[section] && toPaste[section].indexOf(item.description) !== -1)}
+                        checked={(toPaste[section] && toPaste[section].indexOf(item.description) !== -1) ? true : false}
       />
     );
   }
 
+  const low = (string) => {
+    return string.charAt(0).toLowerCase() + string.slice(1);
+  }
 
 
   const addCustom = () => {
@@ -179,7 +194,10 @@ const Question = ({testData, section, updateToPaste, setTestData, toPaste}) => {
           <Grid item xs={3}>
             <Button variant="outlined" onClick={addCustomAndSave}>Add + save</Button>
           </Grid>
+
         </Grid>
+
       </FormGroup>
+
     </Box>)
 }
